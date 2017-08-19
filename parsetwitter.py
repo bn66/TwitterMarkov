@@ -8,10 +8,12 @@ import twitter
 directory = 'database/'
 
 def tweets_to_txt(status):
-    with open(directory + status.user.screen_name, 'a') as f:
+    with open(directory + status.user.screen_name + '.txt', 'a') as f:
         f.write(str(status.id))
         f.write(', ')
-        f.write(status.text.encode('ascii', 'ignore').replace('\n', ''))
+        temp = status.text.encode('ascii', 'ignore').replace('\n', '')
+        temp = temp.replace('&amp;', '&')
+        f.write(temp)
         f.write('\n')
 
 def get_all_tweets(user, last_id = None):
@@ -27,7 +29,8 @@ def get_all_tweets(user, last_id = None):
     total_tweets = user_obj.statuses_count
     mx = total_tweets // 200 + 1
     for i in range(0, mx):
-        statuses = api.GetUserTimeline(screen_name = user, count = 200, max_id = last_id)
+        statuses = api.GetUserTimeline(screen_name = user,
+                        count = 200, max_id = last_id)
         if statuses == []:
             break
         for tweet in statuses:
@@ -45,6 +48,8 @@ if __name__ == '__main__':
                         type = str, help = 'Access Token')
     parser.add_argument('-d', '--accesstokensecret', dest = 'ats',
                         type = str, help = 'Access Token Secret')
+    parser.add_argument('-u', '--user', dest = 'user',
+                        type = str, help = 'User twitter handle')
 
     args = parser.parse_args()
 
@@ -56,5 +61,5 @@ if __name__ == '__main__':
                       access_token_secret=args.ats)
     api.VerifyCredentials()
 
-    get_all_tweets('realdonaldtrump', 747178078682644480)
-    set_trace()
+    get_all_tweets(args.user)
+    # set_trace()
