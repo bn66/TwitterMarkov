@@ -25,7 +25,7 @@ def get_all_tweets(user, last_id = None):
 
     # print([s.text for s in statuses])
 
-    # 3240 tweet retrieval limit for Twitter Rest API
+    # 3200 tweet retrieval limit for Twitter Rest API
     total_tweets = user_obj.statuses_count
     mx = total_tweets // 200 + 1
     for i in range(0, mx):
@@ -61,5 +61,5 @@ if __name__ == '__main__':
                       access_token_secret=args.ats)
     api.VerifyCredentials()
 
-    get_all_tweets(args.user)
-    # set_trace()
+    set_trace()
+    # get_all_tweets(args.user)
